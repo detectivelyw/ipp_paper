@@ -1,0 +1,62 @@
+\documentclass[10pt,preprint,numbers]{sigplanconf}
+
+\usepackage{times}
+\usepackage{datetime}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{todonotes}
+
+%\conferenceinfo{}{}
+\copyrightyear{2018} 
+
+\title{Intra-Process Piping: Accelerating Process Ensembles with
+Software Fault Isolation}
+% No date in title area.
+\date{}
+
+% Paper number and no. of pages as author
+\authorinfo{Paper \textbf{\#XX}}{NN pages}
+
+%\author{Yiwen Li \and Sam Weber \and Justin Cappos \and Brendan Dolan-Gavitt}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+A proposed benefit of software fault isolation (SFI)~\cite{Wahbe:1993}
+is that it can improve the performance of applications made up of
+multiple isolated components communicating via remote procedure calls
+(RPC). There is now a mature and widely used SFI implementation for the
+x86-64 architecture (Google's Native Client, or NaCl), designed for
+hosting untrusted code inside a web browser environment. In this paper,
+we address the question of whether SFI can provide a performance
+improvement over process-based isolation for modern Linux systems,
+without compromising reliability or security. We design and implement an
+SFI system based on Native Client with the specific goal of accelerating
+ensembles of process that communicate via UNIX pipes, such as those
+commonly found in shell scripts, and consider what architectural changes
+in the last twenty years (most notably the widespread adoption of 64-bit
+address spaces) make an SFI-based approach practical. In our
+experiments, we demonstrate that our \emph{Intra-Process Pipe (IPP)}
+system gives speedups of up to XXX\% on a collection of shell scripts
+found in a standard Ubuntu 16.04 distribution, and speedups of up to
+XXX\% on pipelines found in the authors' own shell histories,
+making it attractive for speeding up UNIX shell scripts and day-to-day
+usage.
+
+\end{abstract}
+
+\input{intro}
+\input{relwork}
+\input{design}
+\input{impl}
+\input{experiments}
+\input{discussion}
+\input{conclusion}
+
+\bibliographystyle{abbrvnat}
+\bibliography{biblio}
+
+\end{document}

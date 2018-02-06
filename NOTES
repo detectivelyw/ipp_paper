@@ -1,0 +1,26 @@
+Pro:
+    - No context switch time
+    - Larger VAS makes it viable for many procs
+
+Con:
+    - Multicore means different parts of pipeline can run in parallel
+        - Not much switching overhead?
+
+Complications:
+    - File descriptors?
+        - Force file descriptors into separate ranges and then add / subtract base
+    - Setuid binaries?
+        - Apparently setuid/setgid are actually thread-level... but how 
+    - Thread control (i.e. can one process stop another's threads?)
+    - Locks?
+        - Should be OK since locks are referred to by virtual address?
+    - MMAP with fixed address?
+
+Ideas:
+    - Drawing inspiration from thread pools -- do process pools make
+      sense? I.e. when a process exits, don't tear it down. Instead
+      reuse it, and if another instance of that process is started we
+      can just wipe the data section. This actually fits very well with
+      the UNIX philosophy -- if you have a smaller number of utilities
+      that you compose in many different ways, you will end up invoking
+      the same program often.

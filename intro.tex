@@ -1,0 +1,69 @@
+\section{Introduction}
+\label{sec:intro}
+
+Many common data manipulation and analysis tasks can be carried out in
+the UNIX environment by composing pipelines of built-in utilities. This
+technique of building up complex functionality out of simple utilities,
+often referred to as the \emph{UNIX philosophy}~\cite{unixphilosophy},
+remains popular in industry and academia, despite decades of
+criticism~\cite{unixhaters}. Without wading into this debate, we will
+simply observe that this style of programming typically leads to
+pipelines composed of a large number of processes communicating with one
+another. Because context switching is expensive on many
+architectures~\cite{contextswitch}, including the widely-used 64-bit x86
+architecture, pipelines can often be slower than a monolithic program
+with the same functionality.
+
+One solution to the high cost of context switching is to stop relying on
+hardware to enforce isolation between processes, and instead construct
+software so that it cannot interfere with other running processes, even
+if those processes happen to share the same address space. This
+approach, known as \emph{Software Fault Isolation
+(SFI)}~\cite{Wahbe:1993}, isolates programs by placing them into a
+logical \emph{fault domain} (a portion of the larger address space) and
+then ensuring that the cannot jump to or reference memory outside of
+their domain. More recently, Google's Native Client~\cite{Yee:2009}
+provided a practical, performant (around 7\% slowdown on
+x86-64~\cite{Sehr:2010}) implementation of SFI intended to allow users
+to run untrusted binary applications inside the Google Chrome web
+browser.
+
+\todo[inline]{Brendan: We need to do some more thinking about why SFI for standard
+UNIX processes makes more sense now than it did 24 years ago.}
+
+Despite the availability of a practical SFI implementation, the promise
+of accelerating inter-process communication has not yet been achieved.
+This appears to be due to two factors: first, aside from memory
+isolation, achieving resource and performance isolation inside a single
+address space remains challenging. Second, when SFI was initially
+proposed, the majority of architectures had only 32 bits' worth of
+address space available, which meant that the number of programs that
+could be placed in the same address space was severely limited. This has
+changed with the widespread adoption of 64-bit architectures; on a
+standard Linux system, 128TB of address space is now available to each
+user space process, making it practical to house many processes in a
+single address space. We further reflect and elaborate on these
+architectural shifts and how they make SFI an attractive choice for
+accelerating UNIX pipelines on today's architectures in
+Section~\ref{sec:discussion}.
+
+In this paper, we present the design and implementation of
+\emph{Intra-Process Pipes (IPP)}, a technique for accelerating shell
+script pipelines by moving separate processes into the same address
+space. Aside from the requirement that each program and its libraries be
+compiled using the Native Client compiler, no changes are necessary to
+the operating system or programs. A thin runtime library wraps the
+OS interface to provide resource isolation and implements a fast
+intraprocess communication mechanism. This runtime also smooths over the
+differences between processes and threads, for example by ensuring that
+signals sent to the process are delivered to the appropriate thread. The
+details of the IPP design and implementation can be found in Sections
+\ref{sec:design} and \ref{sec:implementation}, respectively.
+
+\todo[inline]{Brendan: We should briefly summarize what experiments we did, what
+workloads show improvement.}
+
+We conclude that moving process pipelines is an idea whose time has
+come: on a variety of real-world workloads, IPP can provide significant
+speedups without sacrificing the reliability and safety benefits of
+hardware isolation.

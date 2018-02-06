@@ -1,0 +1,53 @@
+\section{Related Work}
+\label{sec:relwork}
+
+\subsection{Software Fault Isolation}
+
+The core of our system is based on \emph{software fault isolation}, an
+idea first proposed by Wahbe et al., who developed the idea of placing
+constraints on binary code in order to isolate each component into a
+\emph{logical fault domain}, with isolation enforced by software rather
+than hardware protection. Although this line of research initially
+focused on RISC architectures with fixed-length instructions, other
+researchers~\cite{Small:1997,Erlingsson:2000} extended this work to the
+variable-length x86 instruction set by adding runtime checks to ensure
+that control flow transfers go to a predefined set of targets. McCamant
+et and Morrisett~\cite{McCamant:2006} introduced key techniques (such as
+forced alignment of instructions with \texttt{nop} padding) that allow
+reliable disassembly of x86 binaries, making them amenable to
+verification. Around the same time, Ford and Cox~\cite{Ford:2008}
+demonstrated a different approach to sandboxing native code. Their
+system, VX32, used dynamic binary translation combined with the segment
+registers available on 32-bit x86 to isolate code with minimal slowdown
+(and, in some cases, a performance \emph{improvement} due to improved
+code cache locality).
+
+This somewhat crowded field was joined by Google's Native Client
+(NaCl)~\cite{Yee:2009}. Native Client combines ideas from multiple
+previous systems, such as the use of reliable disassembly and
+segmentation-based memory isolation, and adds a trusted runtime in the
+same process to provide a secure monitor for external calls; a
+springboard/trampoline system provides secure control flow transfer to
+and from the trusted runtime. Because the 64-bit x86 architecture
+dropped support for hardware memory segmentation (and other
+architectures, such as ARM, never supported it in the first place), the
+Native Client team later developed several new
+techniques~\cite{Sehr:2010} that allow NaCl to be efficiently
+implemented on x86-64 and ARM. Native Client is included in the Google
+Chrome web browser in order to allow untrusted web sites to run native
+code safely in the browser (in contrast to earlier systems such as
+Microsoft's ActiveX, where vulnerabilities in components would lead to
+the compromise of entire browser). This means that the NaCl codebase is
+more mature and ``battle-tested'' than most research systems, which
+makes it an attractive base on which to implement our own system.
+
+\subsection{Language-Based Isolation}
+
+Earlier isolation based on high-level languages: SPIN (Modula-3)~\cite{Bershad:1995}
+
+Singularity OS, specifically \cite{Hunt:2007} and \cite{Hunt:2007a} and \cite{Aiken:2006}
+
+\subsection{Improving IPC/RPC Performance}
+
+Lots and lots of stuff here. SFI paper cites a lot but there has been
+tons of interest due to its relevance to microkernels.
